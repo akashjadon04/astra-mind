@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:1.45.0
+    container_name: astra-mind-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=UTC
+      - EXECUTIONS_DATA_PRUNE=true
+      - EXECUTIONS_DATA_MAX_AGE=168
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:-astra_mind_secret_encryption_key_2026}
+      - N8N_COMMUNITY_PACKAGES_ENABLED=true
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./workflows:/workflows:ro
+      - ./schema:/schema:ro
+
+volumes:
+  n8n_data:
